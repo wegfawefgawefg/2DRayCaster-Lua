@@ -19,8 +19,8 @@ end
 function addAnotherWallPolygon()
     local wall = {}
     wall.body = love.physics.newBody(world, love.graphics.getWidth()/2, love.graphics.getHeight()/2, "dynamic")
-    local numVerts = 4--love.math.random(3, 7)
-    local radius = 5--love.math.random(10, 20)
+    local numVerts = 4 --love.math.random(3, 7)
+    local radius = 5 --love.math.random(5, 40)
     wall.shape = love.physics.newPolygonShape(CPolygon.makePolygonVerts(numVerts, radius))
     wall.fixture = love.physics.newFixture(wall.body, wall.shape, 1)
     objects.walls[#objects.walls+1] = wall
@@ -37,8 +37,9 @@ function love.load()
     )
     
     minNumRays = 20
-    numRays = 128
-    fov = 90
+    maxNumRays = 1920
+    numRays = 256
+    fov = 120
     currentRayBeingCasted = 1
 
     rayCasts = {}
@@ -63,15 +64,19 @@ end
 
 function createRays()
     --  ADAPTIVE RAYCOUNT MODE, (DO NOT ENABLE)
-    -- fps = love.timer.getFPS()
-    -- print(fps)
+    -- local fps = love.timer.getFPS()
+    -- local rayDelta = 5
+    -- local fps = math.ceil(1/love.timer.getDelta())
     -- if fps < 144 then
-    --     numRays = numRays - 1
+    --     numRays = numRays - rayDelta
     --     if numRays < minNumRays then
     --         numRays = minNumRays
     --     end
     -- elseif fps >= 144 then
-    --     numRays = numRays + 1
+    --     numRays = numRays + rayDelta
+    --     if numRays > maxNumRays then
+    --         numRays = maxNumRays
+    --     end
     -- end
     local rays = {}
     local anglePerRay = math.rad(fov / numRays)
@@ -226,9 +231,11 @@ function love.draw()
     drawRayCastFPView()
 
     --  debug prints
+    love.graphics.setColor(1, 1, 1)
     love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
     love.graphics.print("Num Bodies: "..tostring(#objects.walls), 10, 30)
     love.graphics.print("Num Rays: "..tostring(numRays), 10, 50)
+    love.graphics.print(math.ceil(1/love.timer.getDelta()) .. " FPS", 10, 70)
 
     --  draws
     drawWalls()
