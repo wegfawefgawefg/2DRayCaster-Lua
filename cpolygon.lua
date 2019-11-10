@@ -14,9 +14,6 @@ function M.newShape(x, y, numPoints, radius, rotAngle)
         shape.verts[#shape.verts+1] = math.cos(angle) * radius
         shape.verts[#shape.verts+1] = math.sin(angle) * radius
     end
-    for i,k in pairs(shape.verts) do
-        print(k)
-    end
     return shape
 end
 
